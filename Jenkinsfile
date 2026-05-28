@@ -9,6 +9,7 @@ pipeline {
     environment {
         DOCKER_HOST = 'unix:///var/run/docker.sock'
         TESTCONTAINERS_RYUK_DISABLED = 'true'
+        TESTCONTAINERS_HOST_OVERRIDE = 'host.docker.internal'
     }
 
     stages {
