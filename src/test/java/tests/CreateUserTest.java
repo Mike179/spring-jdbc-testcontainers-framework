@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.containers.wait.strategy.Wait;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -18,9 +19,12 @@ public class CreateUserTest {
     @Container
     static PostgreSQLContainer<?> postgres =
             new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("qa_demo")
-                    .withUsername("postgres")
-                    .withPassword("postgres");
+                    .withDatabaseName("testdb")
+                    .withUsername("test")
+                    .withPassword("test")
+                    .waitingFor(
+                            Wait.forListeningPort()
+                    );
 
     @Test
     @Story("Create user in PostgreSQL")
