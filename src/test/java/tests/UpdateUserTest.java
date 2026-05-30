@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @Epic("Database tests")
 @Feature("User management")
-public class CreateUserTest {
+public class UpdateUserTest {
 
     @Container
     static PostgreSQLContainer<?> postgres =
@@ -28,10 +28,10 @@ public class CreateUserTest {
                     );
 
     @Test
-    @Story("Create user")
+    @Story("Update user")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Checks user creation in PostgreSQL")
-    void shouldCreateUser() {
+    @Description("Checks user update in PostgreSQL")
+    void shouldUpdateUser() {
 
         JdbcTemplate jdbcTemplate =
                 DatabaseUtil.getJdbcTemplate(
@@ -43,30 +43,33 @@ public class CreateUserTest {
         UserRepository repository =
                 new UserRepository(jdbcTemplate);
 
-        Allure.step("Create users table", () -> {
-            repository.createTable();
-        });
+        repository.createTable();
+        repository.cleanTable();
 
-        Allure.step("Clean users table", () -> {
-            repository.cleanTable();
-        });
-
-        Allure.step("Insert user Mike", () -> {
+        Allure.step("Create user Mike", () -> {
             repository.insert("Mike");
         });
 
-        Integer count = Allure.step(
-                "Get users count",
-                repository::countUsers
+        Allure.step("Update Mike to John", () -> {
+            repository.update(
+                    1L,
+                    "John"
+            );
+        });
+
+        String actualName = Allure.step(
+                "Get updated user",
+                () -> repository.getUserName(1L)
         );
 
         Allure.addAttachment(
-                "Users count",
-                String.valueOf(count)
+                "Actual name",
+                actualName
         );
 
-        Allure.step("Verify users count equals 1", () -> {
-            assertEquals(1, count);
-        });
+        assertEquals(
+                "John",
+                actualName
+        );
     }
 }

@@ -7,26 +7,23 @@ pipeline {
     }
 
     environment {
-        DOCKER_HOST = 'unix:///var/run/docker.sock'
-        TESTCONTAINERS_RYUK_DISABLED = 'true'
-        TESTCONTAINERS_HOST_OVERRIDE = 'host.docker.internal'
+        DB_URL = credentials('db-url')
+        DB_USER = credentials('db-user')
+        DB_PASSWORD = credentials('db-password')
     }
 
     stages {
 
-        stage('Run Tests') {
+        stage('Environment Info') {
             steps {
-                sh 'mvn clean test'
+                sh 'java -version'
+                sh 'mvn -version'
             }
         }
 
-        stage('Generate Allure Report') {
+        stage('Run Tests') {
             steps {
-                allure([
-                    includeProperties: false,
-                    jdk: '',
-                    results: [[path: 'target/allure-results']]
-                ])
+                sh 'mvn clean test'
             }
         }
     }
@@ -34,6 +31,10 @@ pipeline {
     post {
         always {
             echo 'Pipeline finished'
+        }
+
+        success {
+            echo 'Tests passed'
         }
 
         failure {

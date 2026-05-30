@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @Epic("Database tests")
 @Feature("User management")
-public class CreateUserTest {
+public class DeleteUserTest {
 
     @Container
     static PostgreSQLContainer<?> postgres =
@@ -28,10 +28,10 @@ public class CreateUserTest {
                     );
 
     @Test
-    @Story("Create user")
+    @Story("Delete user")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Checks user creation in PostgreSQL")
-    void shouldCreateUser() {
+    @Description("Checks user deletion from PostgreSQL")
+    void shouldDeleteUser() {
 
         JdbcTemplate jdbcTemplate =
                 DatabaseUtil.getJdbcTemplate(
@@ -43,16 +43,15 @@ public class CreateUserTest {
         UserRepository repository =
                 new UserRepository(jdbcTemplate);
 
-        Allure.step("Create users table", () -> {
-            repository.createTable();
-        });
-
-        Allure.step("Clean users table", () -> {
-            repository.cleanTable();
-        });
+        repository.createTable();
+        repository.cleanTable();
 
         Allure.step("Insert user Mike", () -> {
             repository.insert("Mike");
+        });
+
+        Allure.step("Delete user", () -> {
+            repository.delete(1L);
         });
 
         Integer count = Allure.step(
@@ -65,8 +64,6 @@ public class CreateUserTest {
                 String.valueOf(count)
         );
 
-        Allure.step("Verify users count equals 1", () -> {
-            assertEquals(1, count);
-        });
+        assertEquals(0, count);
     }
 }

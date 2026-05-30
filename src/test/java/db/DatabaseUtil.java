@@ -24,4 +24,28 @@ public class DatabaseUtil {
 
         return new JdbcTemplate(dataSource);
     }
+
+    public static JdbcTemplate getJdbcTemplate() {
+
+        DriverManagerDataSource dataSource =
+                new DriverManagerDataSource();
+
+        dataSource.setDriverClassName(
+                "org.postgresql.Driver"
+        );
+
+        dataSource.setUrl(
+                System.getenv("DB_URL")
+        );
+
+        dataSource.setUsername(
+                System.getenv("DB_USER")
+        );
+
+        dataSource.setPassword(
+                System.getenv("DB_PASSWORD")
+        );
+
+        return new JdbcTemplate(dataSource);
+    }
 }
