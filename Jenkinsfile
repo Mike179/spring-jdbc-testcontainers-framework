@@ -23,7 +23,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh 'mvn clean test'
+                sh 'mvn clean test -Dtest=Cloud*'
             }
         }
     }

@@ -1,7 +1,8 @@
-package tests;
+package tests.local;
 
 import db.DatabaseUtil;
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -11,6 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("local")
 @Testcontainers
 @Epic("Payments")
 @Feature("Idempotency")

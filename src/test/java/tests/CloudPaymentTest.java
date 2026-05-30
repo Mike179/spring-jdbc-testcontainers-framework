@@ -8,59 +8,43 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Epic("Banking")
-@Feature("Users")
-public class CloudCreateUserTest {
+@Feature("Payments")
+public class CloudPaymentTest {
 
     @Test
-    @Story("Create user in Neon PostgreSQL")
+    @Story("Create payment in Neon PostgreSQL")
     @Severity(SeverityLevel.CRITICAL)
-    @Description("Verify that user can be created in cloud PostgreSQL database")
-
-    void shouldCreateUserInNeon() {
+    @Description("Verify that payment record can be created in cloud PostgreSQL database")
+    void shouldCreatePayment() {
 
         JdbcTemplate jdbcTemplate =
                 DatabaseUtil.getJdbcTemplate();
 
-        Allure.step("Create users table if not exists", () -> {
+        Allure.step("Clean payments table", () -> {
+
+            String sql =
+                    "TRUNCATE TABLE payments RESTART IDENTITY";
+
+            Allure.addAttachment(
+                    "SQL",
+                    sql
+            );
+
+            jdbcTemplate.execute(sql);
+        });
+
+        Allure.step("Create payment record", () -> {
 
             String sql = """
-                    CREATE TABLE IF NOT EXISTS users(
-                        id SERIAL PRIMARY KEY,
-                        name VARCHAR(100),
-                        email VARCHAR(200)
+                    INSERT INTO payments(
+                        from_account,
+                        to_account,
+                        amount,
+                        status,
+                        idempotency_key
                     )
+                    VALUES (?,?,?,?,?)
                     """;
-
-            Allure.addAttachment(
-                    "SQL",
-                    sql
-            );
-
-            jdbcTemplate.execute(sql);
-
-            Allure.addAttachment(
-                    "Result",
-                    "Users table verified"
-            );
-        });
-
-        Allure.step("Clean users table", () -> {
-
-            String sql =
-                    "TRUNCATE TABLE users RESTART IDENTITY";
-
-            jdbcTemplate.execute(sql);
-
-            Allure.addAttachment(
-                    "SQL",
-                    sql
-            );
-        });
-
-        Allure.step("Insert user Mike", () -> {
-
-            String sql =
-                    "INSERT INTO users(name,email) VALUES (?,?)";
 
             Allure.addAttachment(
                     "SQL",
@@ -69,22 +53,31 @@ public class CloudCreateUserTest {
 
             jdbcTemplate.update(
                     sql,
-                    "Mike",
-                    "mike@test.com"
+                    1,
+                    2,
+                    500,
+                    "SUCCESS",
+                    "PAYMENT-001"
             );
 
             Allure.addAttachment(
-                    "Inserted user",
-                    "Mike / mike@test.com"
+                    "Payment",
+                    """
+                    from_account=1
+                    to_account=2
+                    amount=500
+                    status=SUCCESS
+                    idempotency_key=PAYMENT-001
+                    """
             );
         });
 
         Integer count = Allure.step(
-                "Get users count",
+                "Get payments count",
                 () -> {
 
                     String sql =
-                            "SELECT count(*) FROM users";
+                            "SELECT count(*) FROM payments";
 
                     Allure.addAttachment(
                             "SQL",
@@ -106,22 +99,19 @@ public class CloudCreateUserTest {
                 }
         );
 
-        Allure.step("Verify user exists in database", () -> {
+        Allure.step("Verify payment was created", () -> {
 
             Allure.addAttachment(
-                    "Expected count",
-                    ">= 1"
+                    "Expected",
+                    "1"
             );
 
             Allure.addAttachment(
-                    "Actual count",
+                    "Actual",
                     String.valueOf(count)
             );
 
-            assertEquals(
-                    true,
-                    count > 0
-            );
+            assertEquals(1, count);
         });
     }
 }

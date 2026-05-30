@@ -1,92 +1,92 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
- <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
- <groupId>org.example</groupId>
- <artifactId>spring-jdbc-testcontainers-framework</artifactId>
- <version>1.0</version>
+  <groupId>org.example</groupId>
+  <artifactId>spring-jdbc-testcontainers-framework</artifactId>
+  <version>1.0</version>
 
- <properties>
-   <maven.compiler.source>21</maven.compiler.source>
-   <maven.compiler.target>21</maven.compiler.target>
- </properties>
+  <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+  </properties>
 
- <dependencyManagement>
-   <dependencies>
-     <dependency>
-       <groupId>org.junit</groupId>
-       <artifactId>junit-bom</artifactId>
-       <version>5.10.2</version>
-       <type>pom</type>
-       <scope>import</scope>
-     </dependency>
-   </dependencies>
- </dependencyManagement>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>5.10.2</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
- <dependencies>
+  <dependencies>
 
-   <dependency>
-     <groupId>org.springframework</groupId>
-     <artifactId>spring-jdbc</artifactId>
-     <version>6.1.6</version>
-   </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>6.1.6</version>
+    </dependency>
 
-   <dependency>
-     <groupId>org.postgresql</groupId>
-     <artifactId>postgresql</artifactId>
-     <version>42.7.3</version>
-   </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.3</version>
+    </dependency>
 
-   <dependency>
-     <groupId>org.junit.jupiter</groupId>
-     <artifactId>junit-jupiter</artifactId>
-     <scope>test</scope>
-   </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-   <dependency>
-     <groupId>org.testcontainers</groupId>
-     <artifactId>junit-jupiter</artifactId>
-     <version>1.19.8</version>
-     <scope>test</scope>
-   </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>1.19.8</version>
+      <scope>test</scope>
+    </dependency>
 
-   <dependency>
-     <groupId>org.testcontainers</groupId>
-     <artifactId>postgresql</artifactId>
-     <version>1.19.8</version>
-     <scope>test</scope>
-   </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>1.19.8</version>
+      <scope>test</scope>
+    </dependency>
 
-   <dependency>
-     <groupId>io.qameta.allure</groupId>
-     <artifactId>allure-junit5</artifactId>
-     <version>2.29.1</version>
-     <scope>test</scope>
-   </dependency>
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>2.29.1</version>
+      <scope>test</scope>
+    </dependency>
 
- </dependencies>
+  </dependencies>
 
- <build>
-   <plugins>
+  <build>
+    <plugins>
 
-     <plugin>
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-surefire-plugin</artifactId>
-       <version>3.2.5</version>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
 
-       <configuration>
-         <systemPropertyVariables>
-           <allure.results.directory>
-             target/allure-results
-           </allure.results.directory>
-         </systemPropertyVariables>
-       </configuration>
+        <configuration>
+          <systemPropertyVariables>
+            <allure.results.directory>
+              target/allure-results
+            </allure.results.directory>
+          </systemPropertyVariables>
+        </configuration>
 
-     </plugin>
+      </plugin>
 
-   </plugins>
- </build>
+    </plugins>
+  </build>
 
 </project>

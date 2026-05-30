@@ -1,12 +1,14 @@
-package tests;
+package tests.local;
 
 import db.DatabaseUtil;
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
 import repository.AccountRepository;
 
 import java.util.concurrent.CountDownLatch;
@@ -15,6 +17,7 @@ import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("local")
 @Testcontainers
 @Epic("Database tests")
 @Feature("Concurrent payments")
