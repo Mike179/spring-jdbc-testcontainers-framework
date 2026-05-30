@@ -26,6 +26,16 @@ pipeline {
                 sh 'mvn clean test -Dtest=Cloud*'
             }
         }
+
+        stage('Generate Allure Report') {
+            steps {
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    results: [[path: 'target/allure-results']]
+                ])
+            }
+        }
     }
 
     post {
