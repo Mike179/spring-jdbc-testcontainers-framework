@@ -21,6 +21,12 @@ pipeline {
             }
         }
 
+        stage('Docker Check') {
+            steps {
+                sh 'docker --version'
+            }
+        }
+
         stage('Run Tests') {
             steps {
                 sh 'mvn clean test -Dtest=Cloud*'
@@ -39,6 +45,7 @@ pipeline {
     }
 
     post {
+
         always {
             echo 'Pipeline finished'
         }
