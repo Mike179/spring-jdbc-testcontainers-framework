@@ -74,20 +74,32 @@ public class CloudRollbackTransactionTest {
 
         int transferAmount = 500;
 
-        Allure.step("Attempt transfer of 500", () -> {
+        Allure.step("Validate transfer possibility", () -> {
 
             Allure.addAttachment(
-                    "Transfer amount",
+                    "Current balance",
+                    String.valueOf(balance)
+            );
+
+            Allure.addAttachment(
+                    "Requested transfer",
                     String.valueOf(transferAmount)
             );
 
-            if (balance >= transferAmount) {
+            if (balance < transferAmount) {
 
-                jdbcTemplate.update(
-                        "UPDATE accounts SET balance = balance - ? WHERE id=1",
-                        transferAmount
+                Allure.addAttachment(
+                        "Transfer result",
+                        "Transfer rejected: insufficient funds"
                 );
+
+                return;
             }
+
+            jdbcTemplate.update(
+                    "UPDATE accounts SET balance = balance - ? WHERE id=1",
+                    transferAmount
+            );
         });
 
         Integer finalBalance = Allure.step(
@@ -115,12 +127,12 @@ public class CloudRollbackTransactionTest {
         Allure.step("Verify balance was not changed", () -> {
 
             Allure.addAttachment(
-                    "Expected",
+                    "Expected balance",
                     "100"
             );
 
             Allure.addAttachment(
-                    "Actual",
+                    "Actual balance",
                     String.valueOf(finalBalance)
             );
 

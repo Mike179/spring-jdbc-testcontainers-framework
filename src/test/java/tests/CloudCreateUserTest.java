@@ -5,7 +5,7 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Epic("Banking")
 @Feature("Users")
@@ -15,34 +15,10 @@ public class CloudCreateUserTest {
     @Story("Create user in Neon PostgreSQL")
     @Severity(SeverityLevel.CRITICAL)
     @Description("Verify that user can be created in cloud PostgreSQL database")
-
     void shouldCreateUserInNeon() {
 
         JdbcTemplate jdbcTemplate =
                 DatabaseUtil.getJdbcTemplate();
-
-        Allure.step("Create users table if not exists", () -> {
-
-            String sql = """
-                    CREATE TABLE IF NOT EXISTS users(
-                        id SERIAL PRIMARY KEY,
-                        name VARCHAR(100),
-                        email VARCHAR(200)
-                    )
-                    """;
-
-            Allure.addAttachment(
-                    "SQL",
-                    sql
-            );
-
-            jdbcTemplate.execute(sql);
-
-            Allure.addAttachment(
-                    "Result",
-                    "Users table verified"
-            );
-        });
 
         Allure.step("Clean users table", () -> {
 
@@ -118,10 +94,7 @@ public class CloudCreateUserTest {
                     String.valueOf(count)
             );
 
-            assertEquals(
-                    true,
-                    count > 0
-            );
+            assertTrue(count > 0);
         });
     }
 }

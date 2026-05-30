@@ -33,95 +33,77 @@ public class CloudTransferMoneyTest {
             jdbcTemplate.execute(sql);
         });
 
-        Allure.step("Create sender account", () -> {
+        Allure.step("Create sender account Mike", () -> {
 
             String sql =
                     "INSERT INTO accounts(owner,balance) VALUES (?,?)";
-
-            Allure.addAttachment(
-                    "SQL",
-                    sql
-            );
 
             jdbcTemplate.update(
                     sql,
                     "Mike",
                     1000
             );
+
+            Allure.addAttachment(
+                    "Account",
+                    "Mike / balance = 1000"
+            );
         });
 
-        Allure.step("Create receiver account", () -> {
+        Allure.step("Create receiver account John", () -> {
 
             String sql =
                     "INSERT INTO accounts(owner,balance) VALUES (?,?)";
-
-            Allure.addAttachment(
-                    "SQL",
-                    sql
-            );
 
             jdbcTemplate.update(
                     sql,
                     "John",
                     500
             );
+
+            Allure.addAttachment(
+                    "Account",
+                    "John / balance = 500"
+            );
         });
 
-        Allure.step("Transfer 200 from Mike to John", () -> {
+        int transferAmount = 200;
 
-            jdbcTemplate.update(
-                    "UPDATE accounts SET balance = balance - 200 WHERE id = 1"
-            );
-
-            jdbcTemplate.update(
-                    "UPDATE accounts SET balance = balance + 200 WHERE id = 2"
-            );
+        Allure.step("Transfer money between accounts", () -> {
 
             Allure.addAttachment(
                     "Transfer amount",
-                    "200"
+                    String.valueOf(transferAmount)
+            );
+
+            jdbcTemplate.update(
+                    "UPDATE accounts SET balance = balance - ? WHERE id = 1",
+                    transferAmount
+            );
+
+            jdbcTemplate.update(
+                    "UPDATE accounts SET balance = balance + ? WHERE id = 2",
+                    transferAmount
             );
         });
 
         Integer mikeBalance = Allure.step(
-                "Get sender balance",
-                () -> {
-
-                    Integer result =
-                            jdbcTemplate.queryForObject(
-                                    "SELECT balance FROM accounts WHERE id=1",
-                                    Integer.class
-                            );
-
-                    Allure.addAttachment(
-                            "Mike balance",
-                            String.valueOf(result)
-                    );
-
-                    return result;
-                }
+                "Get Mike balance",
+                () -> jdbcTemplate.queryForObject(
+                        "SELECT balance FROM accounts WHERE id=1",
+                        Integer.class
+                )
         );
 
         Integer johnBalance = Allure.step(
-                "Get receiver balance",
-                () -> {
-
-                    Integer result =
-                            jdbcTemplate.queryForObject(
-                                    "SELECT balance FROM accounts WHERE id=2",
-                                    Integer.class
-                            );
-
-                    Allure.addAttachment(
-                            "John balance",
-                            String.valueOf(result)
-                    );
-
-                    return result;
-                }
+                "Get John balance",
+                () -> jdbcTemplate.queryForObject(
+                        "SELECT balance FROM accounts WHERE id=2",
+                        Integer.class
+                )
         );
 
-        Allure.step("Verify balances after transfer", () -> {
+        Allure.step("Verify transfer results", () -> {
 
             Allure.addAttachment(
                     "Expected Mike balance",

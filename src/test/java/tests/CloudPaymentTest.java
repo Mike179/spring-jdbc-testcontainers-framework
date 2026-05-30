@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Epic("Banking")
 @Feature("Payments")
@@ -99,19 +100,48 @@ public class CloudPaymentTest {
                 }
         );
 
+        Integer paymentId = Allure.step(
+                "Get created payment id",
+                () -> {
+
+                    String sql =
+                            "SELECT id FROM payments WHERE idempotency_key = ?";
+
+                    Allure.addAttachment(
+                            "SQL",
+                            sql
+                    );
+
+                    Integer result =
+                            jdbcTemplate.queryForObject(
+                                    sql,
+                                    Integer.class,
+                                    "PAYMENT-001"
+                            );
+
+                    Allure.addAttachment(
+                            "Payment ID",
+                            String.valueOf(result)
+                    );
+
+                    return result;
+                }
+        );
+
         Allure.step("Verify payment was created", () -> {
 
             Allure.addAttachment(
-                    "Expected",
+                    "Expected count",
                     "1"
             );
 
             Allure.addAttachment(
-                    "Actual",
+                    "Actual count",
                     String.valueOf(count)
             );
 
             assertEquals(1, count);
+            assertNotNull(paymentId);
         });
     }
 }
