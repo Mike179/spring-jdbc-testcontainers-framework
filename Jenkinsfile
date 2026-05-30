@@ -27,9 +27,24 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Build Docker Image') {
             steps {
-                sh 'mvn clean test -Dtest=Cloud*'
+                sh 'docker build -t banking-tests .'
+            }
+        }
+
+        stage('Run Tests In Docker') {
+            steps {
+                sh '''
+                mkdir -p target/allure-results
+
+                docker run --rm \
+                  -e DB_URL="$DB_URL" \
+                  -e DB_USER="$DB_USER" \
+                  -e DB_PASSWORD="$DB_PASSWORD" \
+                  -v $WORKSPACE/target/allure-results:/app/target/allure-results \
+                  banking-tests
+                '''
             }
         }
 
